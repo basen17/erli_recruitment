@@ -62,30 +62,49 @@ for(time=0;time<70;time++) {
             banks_vector[i].CalculateNextCapitalizationTime();
             // console.log("Bank " + i + " New capitalization time: " + banks_vector[i].next_capitalization);
 
-            var max_intrest = 0;
-            var bank_no = 0;
-            for(j = 0; j < banks_vector.length; j++) {
-                if (banks_vector[i].interest < banks_vector[j].interest){
-                    console.log("Higher interest: " + banks_vector[i].interest + " || " + banks_vector[j].interest);
-                    var res = Math.max.apply(Math,banks_vector.map(function(o){return o.interest;}))
-                    var bank_index = banks_vector.find(function(o){return o.interest == res;})
-                    console.log("Highest intrest of bank no: " + res);
-                    console.log("Bank index: " + bank_index);
-                    // max_intrest = j;
-                    console.log("Bank no with higher interest: " + j);
-                } 
+
+            var res = Math.max.apply(Math,banks_vector.map(function(o){return o.interest;}))
+            if (banks_vector[i].interest<res) {
+                var max_intrest = 0;
+                var bank_no = 0;
+                for(j=0; j<banks_vector.length; j++){
+                    if(max_intrest<banks_vector[j].interest){
+                        max_intrest = banks_vector[j].interest;
+                        bank_no = j;
+                    }
+                }
+                console.log("Highest interest: " + max_intrest + " Bank no: " + bank_no);
+                banks_vector[bank_no].fund = banks_vector[bank_no].fund + (banks_vector[i].fund - (banks_vector[i].fund * (banks_vector[i].transfer_tax / 100)));
+                banks_vector[i].fund = 0;
+
+                console.log("========Transfer fund========");
+                console.log("Bank without money: " + banks_vector[i].fund + " bank with money: " + banks_vector[bank_no].fund)
+
             }
 
-            if (banks_vector[i].fund * banks_vector[i].interest < ((banks_vector[i].fund - (banks_vector[i].fund * banks_vector[i].transfer_tax)) * banks_vector[max_intrest].interest)) {
-                console.log("========Transfer fund========");
-                banks_vector[max_intrest].fund = banks_vector[max_intrest].fund + (banks_vector[i].fund - (banks_vector[i].fund * (banks_vector[i].transfer_tax / 100)));
-                banks_vector[i].fund = 0;
-            }
+            // for(j = 0; j < banks_vector.length; j++) {
+            //     if (banks_vector[i].interest < banks_vector[j].interest){
+            //         console.log("Higher interest: " + banks_vector[i].interest + " || " + banks_vector[j].interest);
+            //         var res = Math.max.apply(Math,banks_vector.map(function(o){return o.interest;}))
+
+            //         var bank_index = banks_vector.find(function(o){return o.interest == res;})
+            //         console.log("Highest intrest of bank no: " + res);
+            //         console.log("Bank index: " + bank_index);
+            //         // max_intrest = j;
+            //         console.log("Bank no with higher interest: " + j);
+            //     } 
+            // }
+
+            // if (banks_vector[i].fund * banks_vector[i].interest < ((banks_vector[i].fund - (banks_vector[i].fund * banks_vector[i].transfer_tax)) * banks_vector[bank_no].interest)) {
+            //     console.log("========Transfer fund========");
+            //     banks_vector[max_intrest].fund = banks_vector[max_intrest].fund + (banks_vector[i].fund - (banks_vector[i].fund * (banks_vector[i].transfer_tax / 100)));
+            //     banks_vector[i].fund = 0;
+            // }
         }
         
         
         // Earn money
-        // console.log('Bank ' + i + ' Interest ' + banks_vector[i].interest / 100)
+        console.log('Bank ' + i + ' Interest ' + banks_vector[i].interest / 100)
         banks_vector[i].fund = Math.floor((banks_vector[i].fund + (banks_vector[i].fund * (banks_vector[i].interest / 100))) * 100) / 100;
     }
 
@@ -110,15 +129,21 @@ for(time=0;time<70;time++) {
     // console.log("Full fund: " + full_fund);
 
     // Calculate and print fund in each bank and full fund
-    if ((time)%60 == 0) {
-        var full_fund = 0;
-        for(i = 0; i < banks_vector.length; i++) {
-            console.log("Bank " + i + "  Fund: "+ banks_vector[i].fund);
-            full_fund = Math.floor((full_fund + banks_vector[i].fund) * 100) / 100;
-        }
-        console.log("*** Full fund: " + full_fund + " ***");
-    }
+    // if ((time)%60 == 0) {
+    //     var full_fund = 0;
+    //     for(i = 0; i < banks_vector.length; i++) {
+    //         console.log("Bank " + i + "  Fund: "+ banks_vector[i].fund);
+    //         full_fund = Math.floor((full_fund + banks_vector[i].fund) * 100) / 100;
+    //     }
+    //     console.log("*** Full fund: " + full_fund + " ***");
+    // }
 
     // time = time + 1;
     console.log("Time: " + (time+1));
+    var full_fund = 0;
+    for(i = 0; i < banks_vector.length; i++) {
+        console.log("Bank " + i + "  Fund: "+ banks_vector[i].fund);
+        full_fund = Math.floor((full_fund + banks_vector[i].fund) * 100) / 100;
+    }
+    console.log("*** Full fund: " + full_fund + " ***");
 }
