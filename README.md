@@ -1,6 +1,11 @@
 # erli_recruitment
 Junior Fullstack Developer in Erli
 
+To run the application use command:
+
+node main.js
+
+
 Task description
 
 Mam konta w "X" różnych bankach, żeby zarabiać na oprocentowaniu z lokaty.
