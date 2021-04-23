@@ -41,7 +41,7 @@ function capitalization() {
             for(j=0; j<banksTab.length; j++) {
                 if(banksTab[j].interest > maxIntrest) {
                     maxIntrest = banksTab[i].interest;
-                    bankNo = j;
+                    var bankNo = j;
                 }
             }
 
