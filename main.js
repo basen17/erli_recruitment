@@ -1,92 +1,88 @@
 class Bank {
     constructor(id,
                 fund = 15000, 
-                capitalization_time = 0, 
-                next_capitalization = 0, 
+                capitalizationTime = 0, 
+                nextCapitalization = 0, 
                 profit = 0, 
                 interest = 0, 
-                transfer_tax = 0)
+                transferTax = 0)
     {
         this.id = id;
         this.fund = fund;
         this.interest = interest;
         this.profit = profit;
-        this.capitalization_time = capitalization_time;
-        this.transfer_tax = transfer_tax;
-        this.next_capitalization = next_capitalization;
+        this.capitalizationTime = capitalizationTime;
+        this.transferTax = transferTax;
+        this.nextCapitalization = nextCapitalization;
     }
 
-    RandBankProperties() {
+    randBankProperties() {
         this.interest = Math.round(((Math.random() * 100) + 1) * 100) / 100;
-        this.capitalization_time = Math.floor((Math.random() * 5) + 5);
-        this.transfer_tax = Math.floor(Math.random() * 15) + 1;
+        this.capitalizationTime = Math.floor((Math.random() * 5) + 5);
+        this.transferTax = Math.floor(Math.random() * 15) + 1;
     }
 
-    CalculateNextCapitalizationTime() {
-        this.next_capitalization = this.next_capitalization + this.capitalization_time;
+    calculateNextCapitalizationTime() {
+        this.nextCapitalization = this.nextCapitalization + this.capitalizationTime;
     }
 }
 
-function Capitalization() {
-    for(i = 0; i < banks_tab.length; i++) {
+function capitalization() {
+    for(i = 0; i < banksTab.length; i++) {
         // Check if time for capitalization has come
-        if (time === banks_tab[i].next_capitalization ) {
-            banks_tab[i].fund += banks_tab[i].profit;
-            banks_tab[i].profit = 0;
-            banks_tab[i].RandBankProperties();
-            banks_tab[i].CalculateNextCapitalizationTime();
+        if (time === banksTab[i].nextCapitalization ) {
+            banksTab[i].fund += banksTab[i].profit;
+            banksTab[i].profit = 0;
+            banksTab[i].randBankProperties();
+            banksTab[i].calculateNextCapitalizationTime();
 
             // Money transfer 
-            var max_intrest = 0;
-            for(j=0; j<banks_tab.length; j++) {
-                if(banks_tab[j].interest > max_intrest) {
-                    max_intrest = banks_tab[i].interest;
-                    bank_no = j;
+            var maxIntrest = 0;
+            for(j=0; j<banksTab.length; j++) {
+                if(banksTab[j].interest > maxIntrest) {
+                    maxIntrest = banksTab[i].interest;
+                    bankNo = j;
                 }
             }
 
-            console.log(banks_tab)
-            if((banks_tab[i].fund * banks_tab[i].interest) * (banks_tab[i].next_capitalization - time) < (1 - (banks_tab[bank_no].transfer_tax / 100)) * (banks_tab[bank_no].fund * (banks_tab[bank_no].interest) * banks_tab[bank_no].next_capitalization - time)) {
-                banks_tab[bank_no].fund = banks_tab[bank_no].fund + (1-banks_tab[bank_no].transfer_tax / 100) * banks_tab[i].fund;
-                banks_tab[i].fund = 0;
-                console.log('=====Transfer=====')
+            if((banksTab[i].fund * banksTab[i].interest) * (banksTab[i].nextCapitalization - time) < (((1 - (banksTab[bankNo].transferTax / 100)) * banksTab[bankNo].fund) * banksTab[bankNo].interest) * (banksTab[bankNo].nextCapitalization - time)) {
+                banksTab[bankNo].fund = banksTab[bankNo].fund + ((1-banksTab[bankNo].transferTax / 100) * banksTab[i].fund);
+                banksTab[i].fund = 0;
             }
         }
     }
 }
 
-function EarnMoney(){
-    for(i = 0; i < banks_tab.length; i++) {
-        banks_tab[i].profit = Math.floor((banks_tab[i].profit + (banks_tab[i].fund * (banks_tab[i].interest / 100))) * 100) / 100;
+function earnMoney(){
+    for(i = 0; i < banksTab.length; i++) {
+        banksTab[i].profit = Math.floor((banksTab[i].profit + (banksTab[i].fund * (banksTab[i].interest / 100))) * 100) / 100;
 
     }
 }
 
-function PrintBanksCurrentState(){
+function printBanksCurrentState(){
     if ((time+1)%60 == 0) {
-        var full_fund = 0;
-        for(i = 0; i < banks_tab.length; i++) {
-            console.log("Bank " + i + "  Fund: "+ banks_tab[i].fund + " Profit: " + banks_tab[i].profit);
-            full_fund = Math.floor((full_fund + banks_tab[i].fund + banks_tab[i].interest) * 100) / 100;
+        var fullFund = 0;
+        for(i = 0; i < banksTab.length; i++) {
+            console.log("Bank " + i + "  Fund: "+ Math.floor(banksTab[i].fund * 100) / 100 + " Profit: " + Math.floor(banksTab[i].profit * 100) / 100);
+            fullFund = Math.floor((fullFund + banksTab[i].fund + banksTab[i].interest) * 100) / 100;
         }
-        console.log("*** Full fund: " + full_fund + " ***");
+        console.log("*** Full fund: " + fullFund + " ***");
     }
 }
 
 
-function Simulation() {
-    Capitalization();        
-    EarnMoney();
-    PrintBanksCurrentState();
+function simulation() {
+    capitalization();        
+    earnMoney();
+    printBanksCurrentState();
 
-    console.log("Time: " + time);
     time +=1;
 }
 
 var time = 0;
-banks_tab = []
+var banksTab = []
 for(i = 0 ; i <= 2 ; i++) {
-    banks_tab[i] = new Bank(i);
+    banksTab[i] = new Bank(i);
 }
-console.log(banks_tab)
-setInterval(Simulation, 100);
+setInterval(simulation, 100);
